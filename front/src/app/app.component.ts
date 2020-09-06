@@ -9,6 +9,7 @@ import { Terminal } from 'xterm';
 export class AppComponent implements OnInit {
 
   title = 'web terminal';
+  cmd = [];
   constructor() { }
 
   ngOnInit(): void {
@@ -19,12 +20,21 @@ export class AppComponent implements OnInit {
       cursorStyle: "bar"
     });
     terminal.open(document.querySelector('#terminal'));
-    terminal.onKey((keyboardEvent) => {
-      if (keyboardEvent.domEvent.key === 'Enter') {
-        // terminal.writeln('\r');
-      } else {
-
+    terminal.onKey((key) => {
+      console.log(key);
+      if (key.domEvent.code === 'Backspace') {
+        this.cmd.slice(0, -1);
       }
+      if (key.domEvent.code === 'Enter') {
+        terminal.writeln('');
+        terminal.clear();
+      }else {
+        this.cmd.push(key.key);
+        terminal.write(key.key);
+      }
+    });
+    terminal.onLineFeed(() => {
+      const input = JSON.stringify({ cmd: this.cmd.join('') });
     });
   }
 }

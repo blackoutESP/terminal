@@ -2,7 +2,8 @@ const express           = require('express');
 const router            = express.Router();
 const sshClient         = require('../utils/client');
 
-router.get('/', (request, response, next) => {
+router.post('/', (request, response, next) => {
+    console.log(request.body);
     const cmd = request.body.cmd;
     sshClient.execute(cmd).then(data => {
         console.log(data);
